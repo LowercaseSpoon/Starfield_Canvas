@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <script src="p5.js" charset="utf-8"></script>
+  <title>playing with canvas</title>
+</head>
+
+<body>
+  <h1>plaiying with canvas</h1>
+  <script type="text/javascript">
+    // variable for empty stars in array
+    let stars = [];
+
+    // variable to control speed of stars
+    let speed;
+
+
+    function setup() {
+      //creates canvas
+      createCanvas(600, 600)
+      //adds stars up to 800 and pushes new array
+      for (let i = 0; i < 800; i++) {
+        stars[i] = new Star()
+      }
+    }
+
+    function draw() {
+
+      //controls speed of stars with mouse
+      speed = map(mouseX, 0, width, 0, 50);
+      //creates background black
+      background(0);
+      //generates stars from center
+      translate(width / 2, height / 2);
+      //pushes stars to length of array
+      for (let i = 0; i < stars.length; i++) {
+
+        //creates new stars
+        stars[i].update();
+        //shows stars
+        stars[i].show();
+      }
+    }
+
+    function Star() {
+      //puts random star in x axis
+      this.x = random(-width, width);
+      //pust random star in y axis
+      this.y = random(-height, height);
+      //puts random star in z axis
+      this.z = random(width);
+      //
+      this.pz = this.z;
+
+
+      this.update = function() {
+        //subtracts z axis from the speed
+        this.z = this.z - speed;
+        //if stars in z axis less than 1
+        if (this.z < 1) {
+          //z axis = width of canvas
+          this.z = width;
+          //
+          this.x = random(-width, width);
+          //
+          this.y = random(-height, height);
+          //
+          this.pz = this.z;
+        }
+      };
+
+      this.show = function() {
+        fill(255);
+        noStroke();
+
+        let sx = map(this.x / this.z, 0, 1, 0, width);
+        let sy = map(this.y / this.z, 0, 1, 0, height);
+
+        let r = map(this.z, 0, width, 16, 0);
+        ellipse(sx, sy, r, r);
+
+        let px = map(this.x / this.pz, 0, 1, 0, width);
+        let py = map(this.y / this.pz, 0, 1, 0, height);
+
+        this.pz = this.z;
+
+        stroke(255);
+        //adds line streak when sped up
+        line(px, py, sx, sy);
+
+      };
+    }
+  </script>
+</body>
+
+</html>
